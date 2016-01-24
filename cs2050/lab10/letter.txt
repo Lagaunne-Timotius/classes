@@ -1,0 +1,7 @@
+Hello, 
+    You should be able to easily parse this file and pull out important information such as this phone number (612)-570-9432 but not this one (314)578-1642. Your program should also be able to handle dates like 04/16/1964 because that day really happened but not 02/31/2011 as it unfortunately did not. Good luck on this assignment and if you have any trouble please send me an email at TA@gmail.com (or if you can manage the bonus* TA@missouri.edu *). 
+
+Sincerely, 
+
+Tiger Truman
+
