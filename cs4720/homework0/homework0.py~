@@ -1,0 +1,19 @@
+def homework0():
+
+	''' Homework 0 for Introduction to Machine Learning and Pattern Recognition, Sp 2016
+		Provide information on your background in programming, python, and git. 
+		Provide insight into what you are hoping to learn in this class this semester. 
+	 	Due Thursday, Jan 21 at 10:50 am
+	 	Submit your assignment as described in class by pushing to github. 
+	''' 
+
+	print('My name is [your name]')
+	print('I am a [your level] majoring in [your major] in the Department of [your department].')
+	print('I have [no/some/extensive] programming experience in general.')
+	print('I have [no/some/extensive] python programming experience.')
+	print('I have [no/some/extensive] experience with using version control software')
+	print('I have [no/some/extensive] experience with git.')
+	print('I am excited to learn the following in this class: [your response]')
+
+if __name__ == '__main__':
+	homework0()
