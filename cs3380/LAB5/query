@@ -1,0 +1,20 @@
+*/3.3.1 Create a View: Part 1
+Create a view that shows the person’s id (pid), first name (fname) and last name (lname) for all people who
+have a body weight above 140. This view should be named “weight” (without the quotes). You must use an
+INNER JOIN in the views query. Your PHP page should then query the view (i.e. SELECT * FROM weight).
+(8 rows)
+3.3.2 Create a View: Part 2
+Create a view that returns the first name (fname), last name (lname) and BMI for people with a weight
+above 150. This view should be named “BMI”. You must use an INNER JOIN and you must reference the
+“weight” view created in 3.3.1. BMI is calculated as
+703 ·
+weight
+height2
+(1)
+In this view, round the BMI value to the nearest whole number. For example, a person with a height of 71
+inches and weight of 145 lbs would have a BMI of 20.2 which would be rounded to 20. Use an SQL function
+2
+to achieve this rounded result. Your PHP page should then query the view (i.e. SELECT * FROM bmi). (12
+8 rows)
+
+*/
