@@ -1,0 +1,361 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass IEEEtran
+\begin_preamble
+\usepackage[OT1]{fontenc}
+\date{}
+%\IEEEoverridecommandlockouts
+%\overrideIEEEmargins
+\title{Unsupervised Classification on Hyperspectral Imagery}
+
+\author{\IEEEauthorblockN{S. Sruthikesh, S. Avusali, S. O'Day, and A. Shafiekhani }
+\IEEEauthorblockA{University of Missouri\\
+Columbia, MO, 65211}
+}
+\end_preamble
+\options letterpaper, 10 pt, conference
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\topmargin 0.75in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+maketitle
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+In this project, several methods were used to classify pixels in a hyperspectral
+ data set taken from Indian Pines.
+ In general, the data was first decomposed using one of the dimensionality
+ reduction techniques discussed and a classification algorithm was applied
+ to the remaining dimensions.
+ Several different approaches to dimensionality reduction and classification
+ were used and the results of these experiments were computed using the
+ Rand Index on the classified image compared with the ground truth provided.
+ (discuss results here)
+\end_layout
+
+\begin_layout Section
+Introduction
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Introduction"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The precise classification of remote sensing images has numerous real time
+ applications such as environmental monitoring, plant and mineral exploration.
+ The emergence of high resolution sensors and supercomputing devices has
+ compelled the use of hyperspectral images for image analysis and classification.
+ Hyperspectral imagery (HSI) captures a dense spectral sampling of reflectance
+ values over a wide range of spectrum.
+ This rich spectral information in every spatial location increases the
+ capability to distinguish different physical structures, leading to the
+ potential of a more precise image classification.
+ However, they suffer from the dimensionality of the data.
+ Hence, we use a two stage approach, dimensionality reduction and unsupervised
+ classification.
+\end_layout
+
+\begin_layout Standard
+The rest of the paper will be divided into sections discussing the implementatio
+n, experiments and corresponding results.
+ The dataset used for these experiments is collected by AVIRIS from the
+ Indian Pines site in Northwest Indiana.
+ It consists of 224 bands from visible to near infrared (400 - 2500 nm).
+ A subset of this data was then created by removing the bands covering water
+ absorption, leaving 200 bands covering 145 x 145 pixels.
+\end_layout
+
+\begin_layout Section
+Implementation
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Implementation"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The implementation covers two stages.
+ First, the data is subjected to a dimensionality reduction.
+ Next, this reduced dataset is processed through a classification algorithm.
+ These methods are detailed below.
+\end_layout
+
+\begin_layout Subsection
+Dimensionality Reduction
+\end_layout
+
+\begin_layout Subsubsection
+Global PCA
+\end_layout
+
+\begin_layout Standard
+Global PCA is the conventional dimensionality reduction.
+ Principle Component Analysis is performed on all bands across the entire
+ image.
+ This should find highly uncorrelated bands across the entire image.
+\end_layout
+
+\begin_layout Subsubsection
+Localized PCA
+\end_layout
+
+\begin_layout Standard
+A PCA implementation was used to determine bands that had a high covariance
+ in specific regions of the image.
+ Theoretically, this should preserve the bands that correspond to differences
+ in local sections of the image.
+ Localized PCA uses the spatial information to first divide the image into
+ sections.
+ PCA is then performed on each section, preserving a single band for each
+ section.
+ Finally, PCA is performed on the entire image, preserving the two highest
+ variance features.
+ All of these are then combined and used to perform a classification.
+\end_layout
+
+\begin_layout Subsubsection
+Split Band PCA
+\end_layout
+
+\begin_layout Standard
+The working theory behind the split band theory of PCA is that bands close
+ to one another will be similar.
+ With this in mind, there should be a minimal loss of information if we
+ perform a component analysis on local clusters of bands.
+ So, Split Band PCA takes the bands of the image and divides them up into
+ bandwidths to perform PCA upon.
+ In the event the number of dimensions is not divisible by the bandwidth,
+ the extra bands are distributed evenly to the first chunks of classes one
+ by one.
+ PCA is then performed on each chunk of bands, transforming the data to
+ preserve only the band with the highest covariance.
+\end_layout
+
+\begin_layout Subsection
+Classification
+\end_layout
+
+\begin_layout Subsubsection
+K-Means & C-Means
+\end_layout
+
+\begin_layout Standard
+The K-Means algorithm uses the Euclidean distance between the points and
+ a centroid to determine the class that each point belongs to.
+ Each centroid is initialized randomly and pixels are assigned to the closest
+ centroid.
+ The centers are then recalculated by averaging the points that have been
+ assigned to it.
+ The process is then repeated until the centroids converge to stable points
+ (Should put a source here on Kmeans.
+\end_layout
+
+\begin_layout Standard
+The C-Means algorithm is similar, but instead of giving each pixel a specific
+ cluster membership, it assigns each point a membership to all clusters
+ based on a slightly modified objective function (Should put a source here
+ on FCM).
+ The assignment of clusters is then the same as for K-Means except the membershi
+p values is used as a weight for all points in the average.
+\end_layout
+
+\begin_layout Subsubsection
+ISODATA
+\end_layout
+
+\begin_layout Standard
+The ISODATA algorithm is an extension of the K-Means algorithm.
+ It uses the same assignment of clusters and update of centers, however
+ it will discard clusters that become to small or split clusters that become
+ to large.
+ As such, it does not need to be explicitly given a number of clusters to
+ create.
+ In practice, this does not work as well as it should, as will be discussed
+ in the following sections.
+\end_layout
+
+\begin_layout Subsubsection
+Latent Dirichlet Allocation
+\end_layout
+
+\begin_layout Subsubsection
+In Latent Dirichlet Allocation(LDA), a document that has collection of words is assumed to be a mixture of topics. Specifically, LDA will find the topic mixture in each document and find the topic assignment for each words.  The mixture of topics in each documents is assumed to have Dirichlet prior. For image segmentation problems, document can be some superpixel of images and the words are the label of pixels that might be constructed with some other algorithm (ex. K-Means or other clustering algorithms). The documents also can be constructed with some other algorithm like normalized cut or K-Means. 
+\end_layout
+
+\begin_layout Subsubsection
+Two Stage Classification
+\end_layout
+
+\begin_layout Standard
+In this section, a two-stage classification using two different classifiers
+ has been proposed.
+ The first stage includes an unsupervised classification methods such as
+ K-means or C-means which provides initialized labels for next stage.
+ In the second stage, using an algorithm to eliminate outliers and given
+ labels calculated in the first stage, SVM algorithm has been used to train
+ for the inliers.
+ Once we trained using inliers, it can be applied to entire data set and
+ obtain different classes.
+ 
+\end_layout
+
+\begin_layout Standard
+Two algorithms have been considered to eliminate outliers, the first one
+ uses searching window to find data points that have similar neighbor labels
+ and by doing that data points that are more consistence and far from class
+ boarder have been selected.
+ The alternative method which can be only used for C-mean classification
+ in first stage uses weights of labels to threshold outliers, that is data
+ point that are more likely to represent class characteristics will be selected
+ and used to train SVM.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Voting
+\end_layout
+
+\begin_layout Standard
+The final classification algorithm explored was a voting method on the results
+ of the other methods.
+ Because the labels from each classification result do not necessarily correspond
+ to the labels in one another, it is necessary to use an algorithm that
+ can handle such situations.
+ For this, we implemented the Hungarian algorithm on the contigency table of each two classification results to find the label map.
+ As the baseline, we used Kmeans which means we implemented the Hungarian algorithm on the contigency table of kmeans classification result with other classification result. After the label map has been produced,  each classification result is relabeled based on the label map. As the final step, majority voting is implemented using the all relabeled result to produce the final result. In the case of no majority vote produced, Kmeans classification result is selected.  
+\end_layout
+
+\begin_layout Section
+Experiments
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Experiments"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The experiments were run on the concept of dimensionality reduction.
+ Each was
+\end_layout
+
+\begin_layout Subsubsection
+Two Stages Classification
+\end_layout
+
+\begin_layout Subsubsection
+Localized PCA
+\end_layout
+
+\begin_layout Subsubsection
+Local Band PCA
+\end_layout
+
+\begin_layout Subsubsection
+Consensus Classification
+\end_layout
+
+\begin_layout Section
+Conclusion 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "mybibtex"
+options "IEEEtran"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
